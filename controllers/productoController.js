@@ -1,59 +1,37 @@
-const Producto = require("../models/producto");
-const categoria = require("../models/categoria");
+const producto = require("../models/producto");
 
-exports.leerProducto = async ( req, res ) => {
-    //res.json({msg: "se ejecuto leer producto"})
-
+exports.leerProductoHome = async ( req, res ) => {
     try {
-        const producto = await Producto.find({creador : req.usuario.id});
-        res.json({producto});
+        const producto1 = await producto.find();
+        res.json({ producto1 });
     } catch (error) {
-        console.log(error);
-        
+        console.log(error)
     }
 }
 
+
+
+
+exports.leerProducto = async (req, res) => {
+    const {id} = req.params;
+    const producto1 = await producto.find().where("categoriaId").equals(id);
+    res.json(producto1);
+}
 exports.crearProducto = async ( req, res ) => {
-const {categoria_1} = req.body;
-
-    try {
-        const categoriaEncontrada = await categoria.findById(categoria_1);
-        if(!categoriaEncontrada){
-            return res.status(404).json({msg: "categoria no encontrada"});
-        }
-
-        const producto = new Producto(req.body);
-
-        producto.creador = req.usuario.id;
-
-        producto.save();
-
-        res.json(producto);
-    } catch (error) {
+   
+    try{
+        const producto1 = new producto(req.body);
+        producto1.save();
+        res.json(producto1);
+    }catch(error){
         console.log(error);
     }
-}
 
+
+}
 exports.actualizarProducto = async ( req, res ) => {
-    const { id } = req.params;
-    const producto = await Producto.findById(id);
-
-    if (!producto){
-        return res.status(400).json({ msg: "Producto no encontrado"});
-    }
-
-    producto.nombre = req.body.nombre || producto.nombre;
-    producto.descripcion = req.body.descripcion || producto.descripcion;
-    producto.stock = req.body.stock || producto.stock;
-    producto.precio= req.body.precio || producto.precio;
-    producto.imagen = req.body.imagen || producto.imagen;
-    producto.save();
-    res.json({producto});
-
-
-
+    res.json({ msg : "ejecuto actualizar Producto"});
 }
-
 exports.borrarProducto = async ( req, res ) => {
-    res.json({msg: "se ejecuto borrar producto"})
+    res.json({ msg : "ejecuto borrar Producto"});
 }
